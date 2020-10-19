@@ -177,7 +177,9 @@
     "metrics": "App Metrics",
     "metricsHint": "View or amend settings for App Metrics",
     "leave": "Leave",
-    "leaveHint": "Leave the application"
+    "leaveHint": "Leave the application",
+    "venueHistory": "Venue Check-In",
+    "venueHistoryHint": "View the Venue Check-In"
   },
   "leave": {
     "title": "Leave",
