@@ -5,15 +5,12 @@ import {
   Text,
   PermissionsAndroid,
   Linking,
-  Platform,
-  Image
+  Platform
 } from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import {text, colors, Button, Spacing} from '../../external-dependencies';
-
-const QRCodePhone = require('../../assets/images/qr-code-phone/qr-code-phone.png');
-
+import Icons from '../../assets/index';
 interface AuthorizationRequiredProps {
   onCancel: () => void;
   onAndroidPermissionGranted?: () => void;
@@ -57,13 +54,7 @@ export const AuthorizationRequired: React.FC<AuthorizationRequiredProps> = ({
     <View style={styles.container}>
       <View style={styles.content}>
         <Spacing s={74} />
-        <Image
-          accessibilityIgnoresInvertColors={false}
-          style={styles.iconSize}
-          width={styles.iconSize.width}
-          height={styles.iconSize.height}
-          source={QRCodePhone}
-        />
+        <Icons.QRCodePhone width={48} height={80} />
         <Spacing s={15} />
         <Text style={styles.title}>
           {t('venueCheckIn:scan:authRequired:title')}
@@ -98,10 +89,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center'
-  },
-  iconSize: {
-    width: 48,
-    height: 80
   },
   title: {
     ...text.xxlargeBlack,

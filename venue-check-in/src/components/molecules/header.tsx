@@ -1,11 +1,10 @@
 import React from 'react';
-import {StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useSafeArea} from 'react-native-safe-area-context';
 
 import {TransparentButton} from '../atoms/transparent-button';
-import {colors, CloseImage as Close} from '../../external-dependencies';
-
-const CloseWhite = require('../../assets/images/close-white/close-white.png');
+import {colors} from '../../external-dependencies';
+import Icons from '../../assets/index';
 
 interface HeaderProps {
   type?: 'default' | 'dark';
@@ -15,7 +14,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({type = 'default', onClose}) => {
   const insets = useSafeArea();
 
-  const CloseIcon = type === 'default' ? Close : CloseWhite;
+  const closeColor = type === 'default' ? colors.teal : colors.white;
   const containerBackground = type === 'default' ? styles.default : styles.dark;
 
   return (
@@ -26,13 +25,7 @@ export const Header: React.FC<HeaderProps> = ({type = 'default', onClose}) => {
         containerBackground
       ]}>
       <TransparentButton onPress={onClose}>
-        <Image
-          accessibilityIgnoresInvertColors={false}
-          style={styles.closeButton}
-          width={styles.closeButton.width}
-          height={styles.closeButton.height}
-          source={CloseIcon}
-        />
+        <Icons.Close height={24} width={24} style={{color: closeColor}} />
       </TransparentButton>
     </View>
   );
@@ -52,9 +45,5 @@ const styles = StyleSheet.create({
   },
   default: {
     backgroundColor: colors.white
-  },
-  closeButton: {
-    width: 24,
-    height: 24
   }
 });

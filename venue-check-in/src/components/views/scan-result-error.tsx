@@ -7,8 +7,7 @@ import {text, Button, Spacing} from '../../external-dependencies';
 import {BasicLayout} from '../templates/basic-layout';
 import {ScanResult} from '../templates/scan-result';
 import {Header} from '../molecules/header';
-
-const ErrorMark = require('../../assets/images/error-mark/error-mark.png');
+import Icons from '../../assets/index';
 
 export const ScanResultError: React.FC = () => {
   const navigation = useNavigation();
@@ -22,7 +21,7 @@ export const ScanResultError: React.FC = () => {
       <Header onClose={goToMain} />
       <BasicLayout>
         <ScanResult
-          image={ErrorMark}
+          icon={<Icons.Error width={80} height={80} />}
           content={
             <>
               <Text style={[styles.title, styles.centered]}>

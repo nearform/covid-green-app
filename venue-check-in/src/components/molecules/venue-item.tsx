@@ -1,11 +1,10 @@
 import React, {useRef, useState} from 'react';
-import {Animated, Image, StyleSheet, Text, View} from 'react-native';
+import {Animated, StyleSheet, Text, View} from 'react-native';
 import {format} from 'date-fns';
 
 import {text, colors} from '../../external-dependencies';
 import {TransparentButton} from '../atoms/transparent-button';
-
-const DeleteImage = require('../../assets/images/delete/delete.png');
+import Icons from '../../assets/index';
 
 interface VenueItemProps {
   name: string;
@@ -46,13 +45,7 @@ export const VenueItem: React.FC<VenueItemProps> = ({
       {editable && (
         <View style={styles.buttonContainer}>
           <TransparentButton onPress={onDeleteItem}>
-            <Image
-              accessibilityIgnoresInvertColors={false}
-              style={styles.deleteButton}
-              width={styles.deleteButton.width}
-              height={styles.deleteButton.height}
-              source={DeleteImage}
-            />
+            <Icons.Delete width={26} height={26} />
           </TransparentButton>
         </View>
       )}
@@ -87,9 +80,5 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     justifyContent: 'center'
-  },
-  deleteButton: {
-    width: 26,
-    height: 26
   }
 });

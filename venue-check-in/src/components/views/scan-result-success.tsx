@@ -3,16 +3,12 @@ import {BackHandler, StyleSheet, Text} from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 
-import {
-  text,
-  Button,
-  Spacing,
-  CheckMarkImage as CheckMark
-} from '../../external-dependencies';
+import {text, Button, Spacing} from '../../external-dependencies';
 import {BasicLayout} from '../templates/basic-layout';
 import {ScanResult} from '../templates/scan-result';
 import {Header} from '../molecules/header';
 import * as VisitedVenueStore from '../../services/visited-venue-store';
+import Icons from '../../assets/index';
 
 export const ScanResultSuccess: React.FC = () => {
   const navigation = useNavigation();
@@ -54,7 +50,7 @@ export const ScanResultSuccess: React.FC = () => {
       <Header onClose={goToMain} />
       <BasicLayout>
         <ScanResult
-          image={CheckMark}
+          icon={<Icons.CheckMark width={80} height={80} />}
           content={
             <>
               <Text style={[styles.title, styles.centered]}>
