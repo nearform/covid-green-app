@@ -11,9 +11,11 @@ export const colors = {
   orange: '#FF8248', // review as used only in toast
   white,
   red,
+  primary: teal,
   teal,
   black,
   gray: '#F5F5F5', // review - only input
+  lightGray: '#EEEBEB',
   darkGray: '#96989B', // review - only input
   dot: '#B2B2B2',
   selectedDot: '#2E2E2E',

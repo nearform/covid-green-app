@@ -14,7 +14,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({type = 'default', onClose}) => {
   const insets = useSafeArea();
 
-  const closeColor = type === 'default' ? colors.teal : colors.white;
+  const closeColor = type === 'default' ? colors.primary : colors.white;
   const containerBackground = type === 'default' ? styles.default : styles.dark;
 
   return (

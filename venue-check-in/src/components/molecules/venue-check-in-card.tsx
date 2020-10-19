@@ -21,7 +21,7 @@ export const VenueCheckInCard = forwardRef<any, VenueCheckInCardProps>(
           </View>
           <View style={styles.textContainer}>
             <Text style={text.largeBlack}>{t('venueCheckIn:title')}</Text>
-            <Text style={[text.smallBold, {color: colors.teal}]}>
+            <Text style={[text.smallBold, {color: colors.primary}]}>
               {t('venueCheckIn:subTitle')}
             </Text>
           </View>
