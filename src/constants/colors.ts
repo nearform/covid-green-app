@@ -1,6 +1,7 @@
 const teal = '#3A7B7F';
 const red = '#B4083A';
 const white = '#FFFFFF';
+const black = '#000000';
 
 export const colors = {
   yellow: '#FFEA0C', // review & remove,
@@ -11,6 +12,7 @@ export const colors = {
   white,
   red,
   teal,
+  black,
   gray: '#F5F5F5', // review - only input
   darkGray: '#96989B', // review - only input
   dot: '#B2B2B2',

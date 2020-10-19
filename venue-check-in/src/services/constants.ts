@@ -1,0 +1,3 @@
+export const QR_CODE_FIELD_DELIMITER = ':';
+export const QR_CODE_CONSTANT = 'DEMOQRCODETRACINGAPP';
+export const QR_CODE_MIN_VERSION = 1;

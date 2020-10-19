@@ -10,6 +10,7 @@
 
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- crashed without this -->
+  <uses-permission android:name="android.permission.CAMERA" />
 
   <!-- permissions remove list (merged from sub modules)-->
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" tools:node="remove" />

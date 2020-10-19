@@ -24,7 +24,7 @@
     "settingsCheckin": "COVID Checkin Settings",
     "dataPolicy": "Data Protection Policy",
     "terms": "Terms and Conditions",
-    "metrics":"Settings For App Metrics",
+    "metrics": "Settings For App Metrics",
     "leave": "Leave COVID Green",
     "contactTracing": "Contact Tracing"
   },
@@ -436,5 +436,45 @@
   "codeInput": {
     "accessibilityLabel": "Code digit {{number}}",
     "accessibilityHint": "Enter {{count}} digit code"
-  }  
+  },
+  "venueCheckIn": {
+    "title": "Venue check-In",
+    "subTitle": "Check in to a venue by scanning an official QR code",
+    "scan": {
+      "title": "Check in to a venue by scanning an official QR code",
+      "description": "Your phone will confirm when the venue has been recognised.",
+      "footer": "If you need assistance, please speak to a member of staff at the venue.",
+      "authRequired": {
+        "title": "Allow camera access",
+        "description": "This app needs access to your camera in order to check in to venues by scanning official QR codes.",
+        "cancelButton": "Go back",
+        "confirmButton": "Allow camera permissions"
+      }
+    },
+    "result": {
+      "success": {
+        "title": "Successful check-in",
+        "message": "Thank you for scanning the QR code.\nYour visit to this venue has been recorded.",
+        "continueButton": "Continue",
+        "cancelButton": "Cancel this check-in"
+      },
+      "error": {
+        "title": "QR code not recognised",
+        "message": "It may not be an official QR code or it could be damaged. Please speak to a member of staff at the venue for assistance.",
+        "tryAgainButton": "Try again"
+      }
+    },
+    "history": {
+      "title": "Venue History",
+      "noVenues": "You haven’t checked in to any venues yet. Once you do, you will be able to view your history and delete individual records here.",
+      "editButton": "Edit",
+      "deleteAllButton": "Delete all check-in data",
+      "alert": {
+        "title": "Delete all check-in data",
+        "message": "Are you sure you want to delete all of your venue check-in data?",
+        "confirmButton": "Delete",
+        "cancelButton": "Cancel"
+      }
+    }
+  }
 }

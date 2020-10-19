@@ -61,6 +61,13 @@ import {Debug} from 'components/views/settings/debug';
 import {isMountedRef, navigationRef} from 'navigation';
 import {colors} from 'theme';
 import {Loading} from 'components/views/loading';
+import {
+  VenueCodeScanner,
+  CameraPermission,
+  ScanResultSuccess,
+  ScanResultError,
+  VenueHistory
+} from '../venue-check-in';
 
 enableScreens();
 
@@ -138,6 +145,184 @@ const MainStack = () => {
   );
 };
 
+const VenueCheckInStack = createStackNavigator();
+const RootStack = createStackNavigator();
+
+const VenueStack = () => {
+  const {t} = useTranslation();
+  return (
+    <VenueCheckInStack.Navigator
+      screenOptions={{
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        cardStyle: {backgroundColor: colors.black},
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+        animationEnabled: true,
+        header: () => null
+      }}
+      initialRouteName={'venueCheckIn.scanner'}
+      mode="modal"
+      headerMode="none">
+      <VenueCheckInStack.Screen
+        name="venueCheckIn.scanner"
+        component={VenueCodeScanner}
+        options={{
+          title: t('viewNames:venueCheckIn')
+        }}
+      />
+      <VenueCheckInStack.Screen
+        name="venueCheckIn.scanSuccess"
+        component={ScanResultSuccess}
+        options={{title: t('viewNames:venueCheckIn')}}
+      />
+      <VenueCheckInStack.Screen
+        name="venueCheckIn.scanError"
+        component={ScanResultError}
+        options={{title: t('viewNames:venueCheckIn')}}
+      />
+
+      <VenueCheckInStack.Screen
+        name="venueCheckIn.permission"
+        component={CameraPermission}
+        options={{title: t('viewNames:venueCheckIn')}}
+      />
+    </VenueCheckInStack.Navigator>
+  );
+};
+
+const AppStack: React.FC = ({route}) => {
+  const {t} = useTranslation();
+  const {initialScreen} = route.params;
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        cardStyle: {backgroundColor: 'transparent'},
+        gestureEnabled: true,
+        gestureDirection: 'horizontal',
+        animationEnabled: true,
+        header: (props) => <NavBar {...props} />
+      }}
+      initialRouteName={initialScreen}
+      headerMode="float">
+      <Stack.Screen
+        name="over16"
+        component={Over16}
+        options={{
+          title: t('viewNames:age'),
+          header: () => null,
+          cardStyle: {backgroundColor: colors.yellow}
+        }}
+      />
+      <Stack.Screen name="under16" component={Under16} />
+      <Stack.Screen
+        name="getStarted"
+        component={GetStarted}
+        options={{
+          title: t('viewNames:getStarted'),
+          header: () => null,
+          cardStyle: {backgroundColor: colors.yellow}
+        }}
+      />
+      <Stack.Screen
+        name="yourData"
+        component={YourData}
+        options={{title: t('yourData:title')}}
+      />
+      <Stack.Screen
+        name="appUsage"
+        component={AppUsage}
+        options={{title: t('appUsage:title')}}
+      />
+      <Stack.Screen
+        name="contactTracingInformation"
+        component={ContactTracingInformation}
+        options={{title: t('tabBar:contactTracing')}}
+      />
+      <Stack.Screen
+        name="followUpCall"
+        component={FollowUpCall}
+        options={{title: t('followUpCall:contactTracing')}}
+      />
+
+      <Stack.Screen
+        name="main"
+        component={MainStack}
+        options={{showSettings: true}}
+      />
+      <Stack.Screen
+        name="casesByCounty"
+        component={CountyBreakdown}
+        options={{title: t('viewNames:casesByCounty')}}
+      />
+      <Stack.Screen
+        name="closeContact"
+        component={CloseContact}
+        options={{title: t('viewNames:closeContact')}}
+      />
+      <Stack.Screen
+        name="uploadKeys"
+        component={UploadKeys}
+        options={{title: t('viewNames:uploadKeys')}}
+      />
+
+      <Stack.Screen
+        name="settings"
+        component={Settings}
+        options={{title: t('viewNames:settings')}}
+      />
+      <Stack.Screen
+        name="settings.contactTracing"
+        component={ContactTracingSettings}
+        options={{title: t('viewNames:settingsContactTracing')}}
+      />
+      <Stack.Screen
+        name="settings.checkIn"
+        component={CheckInSettings}
+        options={{title: t('viewNames:settingsCheckin')}}
+      />
+      <Stack.Screen
+        name="settings.privacy"
+        component={DataProtectionPolicy}
+        options={{title: t('viewNames:dataPolicy')}}
+      />
+      <Stack.Screen
+        name="settings.terms"
+        component={TermsAndConditions}
+        options={{title: t('viewNames:terms')}}
+      />
+      <Stack.Screen
+        name="settings.metrics"
+        component={Metrics}
+        options={{title: t('viewNames:metrics')}}
+      />
+      <Stack.Screen
+        name="settings.leave"
+        component={Leave}
+        options={{title: t('viewNames:leave')}}
+      />
+      <Stack.Screen name="settings.debug" component={Debug} />
+
+      <Stack.Screen name="sorry" component={Sorry} />
+      <Stack.Screen
+        name="privacy"
+        component={DataProtectionPolicy}
+        options={{title: t('viewNames:dataPolicy')}}
+      />
+      <Stack.Screen
+        name="terms"
+        component={TermsAndConditions}
+        options={{title: t('viewNames:terms')}}
+      />
+      <Stack.Screen
+        name="settings.venueHistory"
+        component={VenueHistory}
+        options={{title: t('viewNames:venueHistory')}}
+      />
+    </Stack.Navigator>
+  );
+};
+
 function Navigation({
   notification,
   exposureNotificationClicked,
@@ -197,127 +382,23 @@ function Navigation({
         navigationRef.current = e;
       }}>
       <Spinner animation="fade" visible={app.loading} />
-      <Stack.Navigator
+      <RootStack.Navigator
         screenOptions={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           cardStyle: {backgroundColor: 'transparent'},
           gestureEnabled: true,
-          gestureDirection: 'horizontal',
-          animationEnabled: true,
-          header: (props) => <NavBar {...props} />
+          gestureDirection: 'horizontal'
         }}
-        initialRouteName={initialScreen}
-        headerMode="float">
-        <Stack.Screen
-          name="over16"
-          component={Over16}
-          options={{
-            title: t('viewNames:age'),
-            header: () => null,
-            cardStyle: {backgroundColor: colors.yellow}
-          }}
+        headerMode="none"
+        mode="modal"
+        initialRouteName={'app'}>
+        <RootStack.Screen
+          name="app"
+          component={AppStack}
+          initialParams={{initialScreen}}
         />
-        <Stack.Screen name="under16" component={Under16} />
-        <Stack.Screen
-          name="getStarted"
-          component={GetStarted}
-          options={{
-            title: t('viewNames:getStarted'),
-            header: () => null,
-            cardStyle: {backgroundColor: colors.yellow}
-          }}
-        />
-        <Stack.Screen
-          name="yourData"
-          component={YourData}
-          options={{title: t('yourData:title')}}
-        />
-        <Stack.Screen
-          name="appUsage"
-          component={AppUsage}
-          options={{title: t('appUsage:title')}}
-        />
-        <Stack.Screen
-          name="contactTracingInformation"
-          component={ContactTracingInformation}
-          options={{title: t('tabBar:contactTracing')}}
-        />
-        <Stack.Screen
-          name="followUpCall"
-          component={FollowUpCall}
-          options={{title: t('followUpCall:contactTracing')}}
-        />
-
-        <Stack.Screen
-          name="main"
-          component={MainStack}
-          options={{showSettings: true}}
-        />
-        <Stack.Screen
-          name="casesByCounty"
-          component={CountyBreakdown}
-          options={{title: t('viewNames:casesByCounty')}}
-        />
-        <Stack.Screen
-          name="closeContact"
-          component={CloseContact}
-          options={{title: t('viewNames:closeContact')}}
-        />
-        <Stack.Screen
-          name="uploadKeys"
-          component={UploadKeys}
-          options={{title: t('viewNames:uploadKeys')}}
-        />
-
-        <Stack.Screen
-          name="settings"
-          component={Settings}
-          options={{title: t('viewNames:settings')}}
-        />
-        <Stack.Screen
-          name="settings.contactTracing"
-          component={ContactTracingSettings}
-          options={{title: t('viewNames:settingsContactTracing')}}
-        />
-        <Stack.Screen
-          name="settings.checkIn"
-          component={CheckInSettings}
-          options={{title: t('viewNames:settingsCheckin')}}
-        />
-        <Stack.Screen
-          name="settings.privacy"
-          component={DataProtectionPolicy}
-          options={{title: t('viewNames:dataPolicy')}}
-        />
-        <Stack.Screen
-          name="settings.terms"
-          component={TermsAndConditions}
-          options={{title: t('viewNames:terms')}}
-        />
-        <Stack.Screen
-          name="settings.metrics"
-          component={Metrics}
-          options={{title: t('viewNames:metrics')}}
-        />
-        <Stack.Screen
-          name="settings.leave"
-          component={Leave}
-          options={{title: t('viewNames:leave')}}
-        />
-        <Stack.Screen name="settings.debug" component={Debug} />
-
-        <Stack.Screen name="sorry" component={Sorry} />
-        <Stack.Screen
-          name="privacy"
-          component={DataProtectionPolicy}
-          options={{title: t('viewNames:dataPolicy')}}
-        />
-        <Stack.Screen
-          name="terms"
-          component={TermsAndConditions}
-          options={{title: t('viewNames:terms')}}
-        />
-      </Stack.Navigator>
+        <RootStack.Screen name="venueCheckIn" component={VenueStack} />
+      </RootStack.Navigator>
     </NavigationContainer>
   );
 }

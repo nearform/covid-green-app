@@ -22,6 +22,7 @@ import {useApplication} from 'providers/context';
 import {useAppState} from 'hooks/app-state';
 import {useExposure} from 'providers/exposure';
 import {usePermissions} from 'providers/permissions';
+import {VenueCheckInCard} from '../../../venue-check-in';
 
 export const Dashboard: FC<any> = ({navigation}) => {
   const app = useApplication();
@@ -105,6 +106,8 @@ export const Dashboard: FC<any> = ({navigation}) => {
           <Spacing s={16} />
         </>
       )}
+      <VenueCheckInCard onPress={() => navigation.navigate('venueCheckIn')} />
+      <Spacing s={16} />
       {displayQuickCheckIn && (
         <QuickCheckIn
           onDismissed={() => setQuickCheckInDismissed(true)}
