@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     ...text.xlargeBold
   },
   venue: {
-    ...text.xxlargeBold
+    ...text.xlargeBold
   },
   message: {
     ...text.default
