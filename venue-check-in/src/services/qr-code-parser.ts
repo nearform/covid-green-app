@@ -46,7 +46,7 @@ const isVersionSupported = (jwt: ParsedVenue) =>
 
 export const parseQRCode = async (url: string): Promise<ParsedVenue> => {
   if (!url.startsWith(QR_CODE_URL)) {
-    throw 'Invalid QR code value 1';
+    throw 'Invalid QR code value';
   }
 
   const jwt = getJWT(url);
