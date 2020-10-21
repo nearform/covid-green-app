@@ -155,7 +155,7 @@ const VenueStack = () => {
       screenOptions={{
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         cardStyle: {backgroundColor: colors.black},
-        gestureEnabled: true,
+        gestureEnabled: false,
         gestureDirection: 'horizontal',
         animationEnabled: true,
         header: () => null
