@@ -222,7 +222,7 @@ PODS:
     - React-Core
   - react-native-camera/RN (3.40.0):
     - React-Core
-  - react-native-exposure-notification-service (1.1.16):
+  - react-native-exposure-notification-service (1.1.33):
     - Alamofire (~> 5.2)
     - KeychainSwift (~> 19.0)
     - React
@@ -565,7 +565,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
   react-native-aes: c6e4e3ffcff410535e31e161fca95d50e608d4ee
   react-native-camera: 35854c4f764a4a6cf61c1c3525888b92f0fe4b31
-  react-native-exposure-notification-service: 3cd08da1f2e108a9be8e524f3574a516c2502cb8
+  react-native-exposure-notification-service: 94fd21719cc691e2842be05cc793f29ac90c0231
   react-native-netinfo: a53b00d949b6456913aaf507d9dba90c4008c611
   react-native-safe-area-context: 45e98227f3d65b31d384a5d0950aec4bf73a884c
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
