@@ -36,7 +36,7 @@ export const getVisitedVenues = async (): Promise<VisitedVenue[]> => {
 export const getLastVisitedVenue = async (): Promise<VisitedVenue | null> => {
   const visitedVenues = await getVisitedVenues();
   if (visitedVenues.length > 0) {
-    return visitedVenues[visitedVenues.length - 1];
+    return visitedVenues[0];
   }
   return null;
 };
