@@ -4,7 +4,6 @@ import * as VisitedVenueStore from './visited-venue-store';
 
 // POC implementation of the matching function, it only retrieves
 // the last visited venue and searches its ID in the risky venue list.
-
 export const matchRiskyVenues = async (): Promise<VenueID[]> => {
   const riskyVenues = await getRiskyVenues();
   const lastVisitedVenue = await VisitedVenueStore.getLastVisitedVenue();
