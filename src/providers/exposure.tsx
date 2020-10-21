@@ -1,6 +1,8 @@
 import React, {useEffect, useState, createContext, useContext} from 'react';
 import {NativeEventEmitter, Alert, Platform} from 'react-native';
-import ExposureNotification from 'react-native-exposure-notification-service';
+import ExposureNotification, {
+  KeyServerType
+} from 'react-native-exposure-notification-service';
 import * as SecureStore from 'expo-secure-store';
 import {useTranslation} from 'react-i18next';
 import {BUILD_VERSION, HIDE_DEBUG} from 'react-native-dotenv';
@@ -185,8 +187,9 @@ export function ExposureProvider({children}: props) {
 
   const configure = async () => {
     try {
-      const authToken = await SecureStore.getItemAsync('token');
-      const refreshToken = await SecureStore.getItemAsync('refreshToken');
+      const authToken = (await SecureStore.getItemAsync('token')) || '';
+      const refreshToken =
+        (await SecureStore.getItemAsync('refreshToken')) || '';
       const analyticsOptin = await SecureStore.getItemAsync('analyticsConsent');
       let mobile = '';
       const ctiCallBack = await SecureStore.getItemAsync('cti.callBack');
@@ -202,6 +205,8 @@ export function ExposureProvider({children}: props) {
       const config = {
         exposureCheckFrequency: traceConfiguration.exposureCheckInterval,
         serverURL: urls.api,
+        keyServerUrl: urls.api,
+        keyServerType: KeyServerType.nearform,
         authToken,
         refreshToken,
         storeExposuresFor: traceConfiguration.storeExposuresFor,
@@ -211,7 +216,7 @@ export function ExposureProvider({children}: props) {
         notificationTitle: t('closeContactNotification:title'),
         notificationDesc: t('closeContactNotification:description'),
         callbackNumber: mobile,
-        analyticsOptin: analyticsOptin && analyticsOptin === 'true',
+        analyticsOptin: analyticsOptin === 'true',
         debug: HIDE_DEBUG !== 'y'
       };
 
