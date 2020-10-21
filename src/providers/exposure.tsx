@@ -60,6 +60,7 @@ interface ExposureContextValue extends State {
   getLogData: () => Promise<{}>;
   triggerUpdate: () => Promise<void>;
   deleteExposureData: () => Promise<void>;
+  simulateExposure: (timeDelay?: number) => void;
 }
 
 const initialState = {
@@ -87,7 +88,8 @@ export const ExposureContext = createContext<ExposureContextValue>({
   getCloseContacts: () => Promise.resolve([]),
   getLogData: () => Promise.resolve({}),
   triggerUpdate: () => Promise.resolve(),
-  deleteExposureData: () => Promise.resolve()
+  deleteExposureData: () => Promise.resolve(),
+  simulateExposure: () => {}
 });
 
 export interface props {
@@ -317,6 +319,10 @@ export function ExposureProvider({children}: props) {
     }
   };
 
+  const simulateExposure = (timeDelay?: number) => {
+    ExposureNotification.simulateExposure(timeDelay);
+  };
+
   const value: ExposureContextValue = {
     ...state,
     start,
@@ -331,7 +337,8 @@ export function ExposureProvider({children}: props) {
     getCloseContacts,
     getLogData,
     triggerUpdate,
-    deleteExposureData
+    deleteExposureData,
+    simulateExposure
   };
 
   return (

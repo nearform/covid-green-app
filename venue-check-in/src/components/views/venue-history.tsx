@@ -8,6 +8,7 @@ import {TransparentButton} from '../atoms/transparent-button';
 import {BasicLayout} from '../templates/basic-layout';
 import * as VisitedVenueStore from '../../services/visited-venue-store';
 import {stringToDate} from '../../services/date-utils';
+import {VisitedVenue} from '../../services/common';
 
 const ItemSeparator: React.FC = () => <View style={itemStyles.item} />;
 
@@ -20,9 +21,7 @@ const itemStyles = StyleSheet.create({
 
 export const VenueHistory: React.FC = () => {
   const {t} = useTranslation();
-  const [visitedVenues, setVisitedVenues] = useState<
-    VisitedVenueStore.VisitedVenue[]
-  >([]);
+  const [visitedVenues, setVisitedVenues] = useState<VisitedVenue[]>([]);
   const [isEditable, setIsEditable] = useState<boolean>(false);
 
   useEffect(() => {

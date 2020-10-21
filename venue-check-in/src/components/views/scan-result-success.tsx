@@ -3,20 +3,19 @@ import {BackHandler, StyleSheet, Text} from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 
-import {text, Button, Spacing} from '../../external-dependencies';
+import {text, Button, Spacing, useExposure} from '../../external-dependencies';
 import {BasicLayout} from '../templates/basic-layout';
 import {ScanResult} from '../templates/scan-result';
 import {Header} from '../molecules/header';
 import * as VisitedVenueStore from '../../services/visited-venue-store';
 import Icons from '../../assets/index';
+import {matchRiskyVenues} from '../../services/risky-venue-finder';
+import {VisitedVenue} from '../../services/common';
 
 export const ScanResultSuccess: React.FC = () => {
   const navigation = useNavigation();
   const {t} = useTranslation();
-  const [
-    visitedVenue,
-    setVisitedVenue
-  ] = useState<VisitedVenueStore.VisitedVenue | null>(null);
+  const [visitedVenue, setVisitedVenue] = useState<VisitedVenue | null>(null);
   const goToMain = useCallback(() => navigation.navigate('main'), [navigation]);
   useFocusEffect(
     useCallback(() => {
@@ -39,6 +38,18 @@ export const ScanResultSuccess: React.FC = () => {
 
     getLastVisitedVenue();
   }, []);
+
+  const exposure = useExposure();
+  useEffect(() => {
+    const getVenues = async () => {
+      const matches = await matchRiskyVenues();
+      if (matches.length > 0) {
+        exposure.simulateExposure(20);
+      }
+    };
+
+    getVenues();
+  }, [exposure]);
 
   const cancelCheckIn = async () => {
     await VisitedVenueStore.removeLastVisitedVenue();

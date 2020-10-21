@@ -2,20 +2,9 @@ import * as SecureFileStorage from './secure-file-storage/secure-file-storage';
 import * as DateUtils from './date-utils';
 import isBefore from 'date-fns/isBefore';
 import {dateToString, stringToDate} from './date-utils';
+import {VisitedVenue, Venue} from './common';
 
 const visitedVenueStoreKey = 'visitedVenueStore';
-
-interface Venue {
-  id: string;
-  name: string;
-  address: string;
-}
-
-export interface VisitedVenue {
-  venue: Venue;
-  from: string;
-  to: string;
-}
 
 const saveVisitedVenues = async (newVisitedVenues: VisitedVenue[]) => {
   const visitedVenues = JSON.stringify(newVisitedVenues);
