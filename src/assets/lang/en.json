@@ -26,7 +26,8 @@
     "terms": "Terms and Conditions",
     "metrics": "Settings For App Metrics",
     "leave": "Leave COVID Green",
-    "contactTracing": "Contact Tracing"
+    "contactTracing": "Contact Tracing",
+    "venueHistory": "Venue Check-In"
   },
   "navbar": {
     "settings": "Settings",
