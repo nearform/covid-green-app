@@ -2,11 +2,10 @@ import React, {useState, useEffect, useCallback} from 'react';
 import {Text, StyleSheet} from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import {useTranslation} from 'react-i18next';
+import {useExposure} from 'react-native-exposure-notification-service';
 
 import {DataProtectionLink} from './data-protection-policy';
-
 import {useApplication} from 'providers/context';
-import {useExposure} from 'providers/exposure';
 import {
   validateCode,
   uploadExposureKeys,
@@ -195,7 +194,9 @@ export const UploadKeys = ({navigation}) => {
           color="rgba(0, 207, 104, 0.16)"
           message={t('uploadKeys:uploadSuccess:toast')}
           type="success"
-          icon={<AppIcons.Success width={24} height={24} color={colors.success} />}
+          icon={
+            <AppIcons.Success width={24} height={24} color={colors.success} />
+          }
         />
         <Text style={[text.default, styles.successText]}>
           {t('uploadKeys:uploadSuccess:thanks')}

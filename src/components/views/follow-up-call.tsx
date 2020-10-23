@@ -1,9 +1,9 @@
 import React, {FC, useRef} from 'react';
 import {Text, ScrollView, View, Image, StyleSheet} from 'react-native';
 import {useTranslation} from 'react-i18next';
+import {useExposure} from 'react-native-exposure-notification-service';
 
 import {styles as OStyles} from './get-started';
-
 import {Spacing, Separator} from 'components/atoms/layout';
 import {Heading} from 'components/atoms/heading';
 import {Link} from 'components/atoms/link';
@@ -11,7 +11,6 @@ import {Markdown} from 'components/atoms/markdown';
 import {PhoneNumber} from 'components/organisms/phone-number';
 import {text} from 'theme';
 import {saveMetric, METRIC_TYPES} from 'services/api';
-import {useExposure} from 'providers/exposure';
 import {KeyboardScrollable} from 'components/templates/keyboard-scrollable';
 
 const CallbackImage = require('assets/images/callback/image.png');

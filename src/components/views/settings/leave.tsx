@@ -3,6 +3,7 @@ import {Alert, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import * as Haptics from 'expo-haptics';
 import {ScrollView} from 'react-native-gesture-handler';
+import {useExposure} from 'react-native-exposure-notification-service';
 
 import {Button} from 'components/atoms/button';
 import {DataProtectionLink} from 'components/views/data-protection-policy';
@@ -10,7 +11,6 @@ import {forget} from 'services/api';
 import {Markdown} from 'components/atoms/markdown';
 import {Spacing} from 'components/atoms/spacing';
 import {useApplication} from 'providers/context';
-import {useExposure} from 'providers/exposure';
 import {Basic} from 'components/templates/basic';
 
 export const Leave = ({navigation}) => {

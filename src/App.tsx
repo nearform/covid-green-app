@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {enableScreens} from 'react-native-screens';
 import {Platform, StatusBar, Image, View, AppState} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
@@ -22,12 +22,15 @@ import * as Font from 'expo-font';
 import 'services/i18n';
 
 import {ApplicationProvider, useApplication} from 'providers/context';
-import {ExposureProvider} from 'providers/exposure';
-import {PermissionsProvider} from 'providers/permissions';
+import {
+  ExposureProvider,
+  KeyServerType
+} from 'react-native-exposure-notification-service';
 import {
   SettingsProvider,
   SettingsContext,
-  TraceConfiguration
+  TraceConfiguration,
+  useSettings
 } from 'providers/settings';
 
 import {Base} from 'components/templates/base';
@@ -61,6 +64,7 @@ import {Debug} from 'components/views/settings/debug';
 import {isMountedRef, navigationRef} from 'navigation';
 import {colors} from 'theme';
 import {Loading} from 'components/views/loading';
+import * as SecureStore from 'expo-secure-store';
 import {
   VenueCodeScanner,
   CameraPermission,
@@ -68,6 +72,7 @@ import {
   ScanResultError,
   VenueHistory
 } from '../venue-check-in';
+import {urls} from './constants/urls';
 
 enableScreens();
 
@@ -403,6 +408,61 @@ function Navigation({
   );
 }
 
+const ExposureApp: React.FC = ({children}) => {
+  const {t} = useTranslation();
+  const [authToken, setAuthToken] = useState<string>('');
+  const [refreshToken, setRefreshToken] = useState<string>('');
+
+  const settings = useSettings();
+  const app = useApplication();
+
+  useEffect(() => {
+    async function getTokens() {
+      try {
+        const storedAuthToken = (await SecureStore.getItemAsync('token')) || '';
+        const storedRefreshToken =
+          (await SecureStore.getItemAsync('refreshToken')) || '';
+
+        if (storedAuthToken !== authToken) {
+          setAuthToken(storedAuthToken);
+        }
+        if (storedRefreshToken !== refreshToken) {
+          setRefreshToken(storedRefreshToken);
+        }
+      } catch (err) {
+        console.log('error getting tokens', err);
+      }
+    }
+
+    getTokens();
+  }, [app.user]);
+
+  const mobile =
+    (app.callBackData && app.callBackData.mobile) ||
+    (app.callBackData &&
+      `${app.callBackData.code}${app.callBackData.number.replace(
+        /^0+/,
+        ''
+      )}`) ||
+    '';
+
+  return (
+    <ExposureProvider
+      isReady={Boolean(app.user?.valid && authToken && refreshToken)}
+      traceConfiguration={settings.traceConfiguration}
+      serverUrl={urls.api}
+      keyServerUrl={urls.api}
+      keyServerType={KeyServerType.nearform}
+      authToken={authToken}
+      refreshToken={refreshToken}
+      notificationTitle={t('closeContactNotification:title')}
+      notificationDescription={t('closeContactNotification:description')}
+      callbackNumber={mobile}>
+      {children}
+    </ExposureProvider>
+  );
+};
+
 interface State {
   loading: boolean;
   token?: {os: string; token: string};
@@ -503,19 +563,17 @@ export default function App(props: {
                   user={settingsValue.user}
                   consent={settingsValue.consent}
                   appConfig={settingsValue.appConfig}>
-                  <PermissionsProvider user={settingsValue.user}>
-                    <ExposureProvider>
-                      <StatusBar barStyle="default" />
-                      <Navigation
-                        traceConfiguration={settingsValue.traceConfiguration}
-                        notification={state.notification}
-                        exposureNotificationClicked={
-                          state.exposureNotificationClicked
-                        }
-                        setState={setState}
-                      />
-                    </ExposureProvider>
-                  </PermissionsProvider>
+                  <ExposureApp>
+                    <StatusBar barStyle="default" />
+                    <Navigation
+                      traceConfiguration={settingsValue.traceConfiguration}
+                      notification={state.notification}
+                      exposureNotificationClicked={
+                        state.exposureNotificationClicked
+                      }
+                      setState={setState}
+                    />
+                  </ExposureApp>
                 </ApplicationProvider>
               );
             }}

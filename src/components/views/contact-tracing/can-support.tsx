@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {Platform, Text, Linking} from 'react-native';
 import {useTranslation} from 'react-i18next';
+import {useExposure} from 'react-native-exposure-notification-service';
 
 import {AppIcons} from 'assets/icons';
 import {Button} from 'components/atoms/button';
@@ -9,7 +10,6 @@ import {colors, text} from 'theme';
 import {ResponsiveImage} from 'components/atoms/responsive-image';
 import {Spacing} from 'components/atoms/layout';
 import {Toast} from 'components/atoms/toast';
-import {useExposure} from 'providers/exposure';
 
 export const CanSupport: FC = () => {
   const {t} = useTranslation();

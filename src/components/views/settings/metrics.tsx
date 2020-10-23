@@ -2,12 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text, Switch, View, StyleSheet} from 'react-native';
 import * as SecureStore from 'expo-secure-store';
+import {useExposure} from 'react-native-exposure-notification-service';
 
 import {colors, text} from 'theme';
 import {DataProtectionLink} from 'components/views/data-protection-policy';
 import {Markdown} from 'components/atoms/markdown';
 import {Spacing} from 'components/atoms/spacing';
-import {useExposure} from 'providers/exposure';
 import {Scrollable} from 'components/templates/scrollable';
 
 export const Metrics = () => {

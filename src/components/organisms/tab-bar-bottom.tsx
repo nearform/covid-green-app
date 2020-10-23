@@ -10,10 +10,13 @@ import {
 import {TFunction} from 'i18next';
 import {useTranslation} from 'react-i18next';
 import Constants from 'expo-constants';
+import {
+  useExposure,
+  StatusState
+} from 'react-native-exposure-notification-service';
 
 import {colors, text} from 'theme';
 import {TabBarIcons, AppIcons} from 'assets/icons';
-import {useExposure, StatusState} from 'providers/exposure';
 
 export const shareApp = async (t: TFunction) => {
   try {
@@ -44,7 +47,8 @@ interface Tab {
 }
 
 const getIcon = (tab: Tab, active: Boolean, status: String) => {
-  if (status === StatusState.unknown && tab.icon.unknown) return tab.icon.unknown;
+  if (status === StatusState.unknown && tab.icon.unknown)
+    return tab.icon.unknown;
   if (active) return tab.icon.active;
   if (!active) return tab.icon.inactive;
   return tab.icon.inactive;

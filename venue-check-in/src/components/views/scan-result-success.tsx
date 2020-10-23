@@ -2,8 +2,9 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {BackHandler, StyleSheet, Text} from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
+import {useExposure} from 'react-native-exposure-notification-service';
 
-import {text, Button, Spacing, useExposure} from '../../external-dependencies';
+import {text, Button, Spacing} from '../../external-dependencies';
 import {BasicLayout} from '../templates/basic-layout';
 import {ScanResult} from '../templates/scan-result';
 import {Header} from '../molecules/header';

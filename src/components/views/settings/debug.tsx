@@ -7,11 +7,12 @@ import {
   Alert,
   StyleSheet
 } from 'react-native';
-import ExposureNotification from 'react-native-exposure-notification-service';
+import ExposureNotification, {
+  useExposure
+} from 'react-native-exposure-notification-service';
 import {format} from 'date-fns';
 
 import {Button} from 'components/atoms/button';
-import {useExposure} from 'providers/exposure';
 import {Basic} from 'components/templates/basic';
 
 const emitter = new NativeEventEmitter(ExposureNotification);
@@ -67,7 +68,7 @@ export const Debug = ({navigation}) => {
       emitter.removeListener('exposureEvent', handleEvent);
     } catch (e) {}
     let subscription = emitter.addListener('exposureEvent', handleEvent);
-    await exposure.checkExposure(true);
+    await exposure.checkExposure(false, true);
   };
 
   useEffect(() => {

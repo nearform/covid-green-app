@@ -2,6 +2,7 @@ import React, {FC} from 'react';
 import {Platform, Linking} from 'react-native';
 import * as IntentLauncher from 'expo-intent-launcher';
 import {useTranslation} from 'react-i18next';
+import {useExposure} from 'react-native-exposure-notification-service';
 
 import {AppIcons} from 'assets/icons';
 import {Button} from 'components/atoms/button';
@@ -11,7 +12,6 @@ import {Markdown} from 'components/atoms/markdown';
 import {ResponsiveImage} from 'components/atoms/responsive-image';
 import {Spacing} from 'components/atoms/layout';
 import {Toast} from 'components/atoms/toast';
-import {useExposure} from 'providers/exposure';
 
 interface NotActiveProps {
   exposureOff?: boolean;

@@ -2,6 +2,7 @@ import React, {FC, useState, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
+import {useExposure} from 'react-native-exposure-notification-service';
 
 import {AppIcons} from 'assets/icons';
 import {AppStats} from 'components/organisms/app-stats';
@@ -20,8 +21,6 @@ import {TrackerAreaChart} from 'components/molecules/area-chart';
 import {TransmissionChart} from 'components/molecules/transmission-chart';
 import {useApplication} from 'providers/context';
 import {useAppState} from 'hooks/app-state';
-import {useExposure} from 'providers/exposure';
-import {usePermissions} from 'providers/permissions';
 import {VenueCheckInCard} from '../../../venue-check-in';
 
 export const Dashboard: FC<any> = ({navigation}) => {
@@ -32,7 +31,6 @@ export const Dashboard: FC<any> = ({navigation}) => {
   const [appState] = useAppState();
   const isFocused = useIsFocused();
   const exposure = useExposure();
-  const {readPermissions} = usePermissions();
 
   const {verifyCheckerStatus} = app;
   const {checkInConsent, quickCheckIn, checks} = app;
@@ -47,7 +45,7 @@ export const Dashboard: FC<any> = ({navigation}) => {
       if (!isFocused || appState !== 'active') {
         return;
       }
-      readPermissions();
+      exposure.readPermissions();
       verifyCheckerStatus();
     }, [isFocused, appState, verifyCheckerStatus])
   );
