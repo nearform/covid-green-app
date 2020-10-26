@@ -14,6 +14,8 @@ import {format} from 'date-fns';
 
 import {Button} from 'components/atoms/button';
 import {Basic} from 'components/templates/basic';
+import {Spacing} from 'components/atoms/spacing';
+import {showRiskyVenueNotification} from '../../../../venue-check-in';
 
 const emitter = new NativeEventEmitter(ExposureNotification);
 
@@ -110,6 +112,10 @@ export const Debug = ({navigation}) => {
     ]);
   };
 
+  const checkRiskyVenues = () => {
+    showRiskyVenueNotification(2);
+  };
+
   const displayContact = (contact: Object) => {
     const aDay = 24 * 60 * 60 * 1000;
 
@@ -168,12 +174,18 @@ export const Debug = ({navigation}) => {
 
   return (
     <Basic heading="Debug">
-      <Button type="major" onPress={checkExposure}>
+      <Button type="default" onPress={checkExposure}>
         Check Exposure
       </Button>
-      <Button type="major" onPress={deleteAllData}>
+      <Spacing s={8} />
+      <Button type="danger" onPress={deleteAllData}>
         Delete All Data
       </Button>
+      <Spacing s={8} />
+      <Button type="default" onPress={checkRiskyVenues}>
+        Check Risky Venues
+      </Button>
+      <Spacing s={8} />
       {logData && (
         <View style={styles.logScroll}>
           <ScrollView style={styles.contactsScroll}>

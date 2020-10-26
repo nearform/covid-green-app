@@ -70,7 +70,9 @@ import {
   CameraPermission,
   ScanResultSuccess,
   ScanResultError,
-  VenueHistory
+  VenueHistory,
+  RiskyVenueContact,
+  isRiskyVenueNotificaton
 } from '../venue-check-in';
 import {urls} from './constants/urls';
 
@@ -324,6 +326,11 @@ const AppStack: React.FC = ({route}) => {
         component={VenueHistory}
         options={{title: t('viewNames:venueHistory')}}
       />
+      <Stack.Screen
+        name="riskyVenueContact"
+        component={RiskyVenueContact}
+        options={{title: t('viewNames:riskyVenueContact')}}
+      />
     </Stack.Navigator>
   );
 };
@@ -331,11 +338,13 @@ const AppStack: React.FC = ({route}) => {
 function Navigation({
   notification,
   exposureNotificationClicked,
+  riskyVenueNotification,
   setState
 }: {
   traceConfiguration: TraceConfiguration;
   notification: PN | null;
   exposureNotificationClicked: Boolean | null;
+  riskyVenueNotification: PN | null;
   setState: (value: React.SetStateAction<State>) => void;
 }) {
   const app = useApplication();
@@ -348,6 +357,12 @@ function Navigation({
       isMountedRef.current = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (navigationRef.current && riskyVenueNotification) {
+      navigationRef.current.navigate('riskyVenueContact');
+    }
+  }, [riskyVenueNotification]);
 
   useEffect(() => {
     if (Platform.OS !== 'ios') {
@@ -468,6 +483,7 @@ interface State {
   token?: {os: string; token: string};
   notification: PN | null;
   exposureNotificationClicked: Boolean | null;
+  riskyVenueNotification: PN | null;
 }
 
 export default function App(props: {
@@ -476,7 +492,8 @@ export default function App(props: {
   const [state, setState] = React.useState<State>({
     loading: false,
     notification: null,
-    exposureNotificationClicked: props.exposureNotificationClicked
+    exposureNotificationClicked: props.exposureNotificationClicked,
+    riskyVenueNotification: null
   });
 
   useEffect(() => {
@@ -513,27 +530,39 @@ export default function App(props: {
     PushNotification.configure({
       onRegister: function () {},
       onNotification: async function (notification) {
-        let requiresHandling = false;
-        if (Platform.OS === 'ios') {
-          console.log('iOS notification', notification, AppState.currentState);
-          if (
-            (notification && notification.userInteraction) ||
-            (AppState.currentState === 'active' && notification)
-          ) {
-            PushNotification.setApplicationIconBadgeNumber(0);
-            requiresHandling = true;
-            setTimeout(() => {
-              notification.finish(
-                Platform.OS === 'ios'
-                  ? PushNotificationIOS.FetchResult.NoData
-                  : ''
-              );
-            }, 3000);
+        if (isRiskyVenueNotificaton(notification)) {
+          setTimeout(
+            () =>
+              setState((s) => ({...s, riskyVenueNotification: notification})),
+            500
+          );
+        } else {
+          let requiresHandling = false;
+          if (Platform.OS === 'ios') {
+            console.log(
+              'iOS notification',
+              notification,
+              AppState.currentState
+            );
+            if (
+              (notification && notification.userInteraction) ||
+              (AppState.currentState === 'active' && notification)
+            ) {
+              PushNotification.setApplicationIconBadgeNumber(0);
+              requiresHandling = true;
+              setTimeout(() => {
+                notification.finish(
+                  Platform.OS === 'ios'
+                    ? PushNotificationIOS.FetchResult.NoData
+                    : ''
+                );
+              }, 3000);
+            }
           }
-        }
-        if (requiresHandling) {
-          console.log('setting notification');
-          setTimeout(() => setState((s) => ({...s, notification})), 500);
+          if (requiresHandling) {
+            console.log('setting notification');
+            setTimeout(() => setState((s) => ({...s, notification})), 500);
+          }
         }
       },
       senderID: '1087125483031',
@@ -568,6 +597,7 @@ export default function App(props: {
                     <Navigation
                       traceConfiguration={settingsValue.traceConfiguration}
                       notification={state.notification}
+                      riskyVenueNotification={state.riskyVenueNotification}
                       exposureNotificationClicked={
                         state.exposureNotificationClicked
                       }

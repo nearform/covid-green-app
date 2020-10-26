@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {BackHandler, StyleSheet, Text} from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
-import {useExposure} from 'react-native-exposure-notification-service';
 
 import {text, Button, Spacing} from '../../external-dependencies';
 import {BasicLayout} from '../templates/basic-layout';
@@ -10,7 +9,6 @@ import {ScanResult} from '../templates/scan-result';
 import {Header} from '../molecules/header';
 import * as VisitedVenueStore from '../../services/visited-venue-store';
 import Icons from '../../assets/index';
-import {matchRiskyVenues} from '../../services/risky-venue-finder';
 import {VisitedVenue} from '../../services/common';
 
 export const ScanResultSuccess: React.FC = () => {
@@ -39,18 +37,6 @@ export const ScanResultSuccess: React.FC = () => {
 
     getLastVisitedVenue();
   }, []);
-
-  const exposure = useExposure();
-  useEffect(() => {
-    const getVenues = async () => {
-      const matches = await matchRiskyVenues();
-      if (matches.length > 0) {
-        exposure.simulateExposure(20);
-      }
-    };
-
-    getVenues();
-  }, [exposure]);
 
   const cancelCheckIn = async () => {
     await VisitedVenueStore.removeLastVisitedVenue();
