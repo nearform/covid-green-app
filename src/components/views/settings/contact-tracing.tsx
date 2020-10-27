@@ -23,7 +23,6 @@ export const ContactTracingSettings = () => {
   const {t} = useTranslation();
   const [appState] = useAppState();
   const isFocused = useIsFocused();
-  const {readPermissions} = usePermissions();
   const {
     supported,
     status,
@@ -32,7 +31,8 @@ export const ContactTracingSettings = () => {
     contacts,
     deleteExposureData,
     configure,
-    authoriseExposure
+    authoriseExposure,
+    readPermissions
   } = useExposure();
 
   const [confirmedChanges, setConfirmedChanges] = useState<boolean>(false);
