@@ -113,7 +113,7 @@ export const Debug = ({navigation}) => {
   };
 
   const checkRiskyVenues = () => {
-    showRiskyVenueNotification(2);
+    showRiskyVenueNotification();
   };
 
   const displayContact = (contact: Object) => {

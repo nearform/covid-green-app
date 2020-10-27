@@ -24,12 +24,10 @@ export const matchRiskyVenues = async (): Promise<VenueID[]> => {
   return [];
 };
 
-export const showRiskyVenueNotification = (delayInSec: number = 1) => {
-  // PushNotification.localNotification({
-  PushNotification.localNotificationSchedule({
+export const showRiskyVenueNotification = () => {
+  PushNotification.localNotification({
     title: i18n.t('venueCheckIn:notification:title'),
-    message: i18n.t('venueCheckIn:notification:message'),
-    date: new Date(Date.now() + delayInSec * 1000)
+    message: i18n.t('venueCheckIn:notification:message')
   });
 };
 
