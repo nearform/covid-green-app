@@ -485,7 +485,7 @@
       "message": "Please check the COVID Green app now."
     },
     "riskyVenueContact": {
-      "title": "Risky Venue Contact",
+      "title": "Risky Venue Alert",
       "alertintro": "The COVID Green App has detected that you have been in a venue together with other customers, and one of them has tested positive for coronavirus. You may need to be tested.",
       "todo": {
         "title": "There are some things that you should do to protect others."
