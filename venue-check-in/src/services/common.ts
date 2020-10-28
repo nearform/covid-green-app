@@ -9,7 +9,6 @@ export interface Venue {
 export interface VisitedVenue {
   venue: Venue;
   from: string;
-  to: string;
 }
 
 export interface RiskyVenue {

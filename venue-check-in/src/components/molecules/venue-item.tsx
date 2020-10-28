@@ -9,7 +9,7 @@ import Icons from '../../assets/index';
 interface VenueItemProps {
   name: string;
   from: Date;
-  to: Date;
+  to?: Date;
   editable?: boolean;
   onDelete: () => void;
 }
@@ -40,6 +40,7 @@ export const VenueItem: React.FC<VenueItemProps> = ({
     return null;
   }
 
+  const timeInterval = formatDate(from) + (to ? ` - ${formatDate(to)}` : '');
   return (
     <Animated.View style={[styles.container, {opacity: fadeAnim}]}>
       {editable && (
@@ -51,9 +52,7 @@ export const VenueItem: React.FC<VenueItemProps> = ({
       )}
       <View style={styles.info}>
         <Text style={styles.name}>{name}</Text>
-        <Text style={styles.date}>
-          {formatDate(from)} - {formatDate(to)}
-        </Text>
+        <Text style={styles.date}>{timeInterval}</Text>
       </View>
     </Animated.View>
   );

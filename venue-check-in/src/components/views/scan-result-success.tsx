@@ -11,7 +11,8 @@ import * as VisitedVenueStore from '../../services/visited-venue-store';
 import Icons from '../../assets/index';
 import {VisitedVenue} from '../../services/common';
 
-export const ScanResultSuccess: React.FC = () => {
+export const ScanResultSuccess: React.FC<any> = ({route}) => {
+  const {isLastCheckinValid} = route.params;
   const navigation = useNavigation();
   const {t} = useTranslation();
   const [visitedVenue, setVisitedVenue] = useState<VisitedVenue | null>(null);
@@ -39,7 +40,9 @@ export const ScanResultSuccess: React.FC = () => {
   }, []);
 
   const cancelCheckIn = async () => {
-    await VisitedVenueStore.removeLastVisitedVenue();
+    if (isLastCheckinValid) {
+      await VisitedVenueStore.removeLastVisitedVenue();
+    }
     navigation.goBack();
   };
 

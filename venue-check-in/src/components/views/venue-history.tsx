@@ -91,7 +91,6 @@ export const VenueHistory: React.FC = () => {
               editable={isEditable}
               name={item.venue.name}
               from={stringToDate(item.from)}
-              to={stringToDate(item.to)}
               onDelete={() => onDelete(index)}
             />
           )}

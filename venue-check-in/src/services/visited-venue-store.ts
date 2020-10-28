@@ -1,8 +1,7 @@
 import * as SecureFileStorage from './secure-file-storage/secure-file-storage';
 import * as DateUtils from './date-utils';
-import isBefore from 'date-fns/isBefore';
-import {dateToString, stringToDate} from './date-utils';
 import {VisitedVenue, Venue} from './common';
+import {SAME_VENUE_CHECKIN_INTERVAL_IN_MINUTES} from './constants';
 
 const visitedVenueStoreKey = 'visitedVenueStore';
 
@@ -33,28 +32,54 @@ export const getLastVisitedVenue = async (): Promise<VisitedVenue | null> => {
 export const removeLastVisitedVenue = async () => {
   const visitedVenues = await getVisitedVenues();
   if (visitedVenues.length > 0) {
-    visitedVenues.pop();
+    visitedVenues.shift();
     await saveVisitedVenues(visitedVenues);
   }
 };
 
-export const finishLastVisitAndAddNewVenue = async (newVenue: Venue) => {
-  const visitedVenues = await getVisitedVenues();
-  if (visitedVenues.length > 0) {
+const shouldAddNewVenue = (
+  visitedVenues: VisitedVenue[],
+  newVisitedVenue: VisitedVenue
+): boolean => {
+  if (visitedVenues.length === 0) {
+    // If the venue lists is empty, you can add the new one
+    return true;
+  } else {
     const lastVisitedVenue = visitedVenues[0];
-    const checkOutTime = DateUtils.roundUpToNearestQuarter();
-    if (isBefore(checkOutTime, stringToDate(lastVisitedVenue.to))) {
-      lastVisitedVenue.to = dateToString(checkOutTime);
+    if (lastVisitedVenue.venue.id !== newVisitedVenue.venue.id) {
+      // If the venue list is not empty but the last venue checked-in
+      // is different from the new one, you can add it
+      return true;
+    } else {
+      // If the last venue checked-in is the same, you can add a second
+      // check-in only if it occurs after an interval
+      const diff = DateUtils.isFirstDateAfterSecondDate(
+        newVisitedVenue.from,
+        lastVisitedVenue.from,
+        SAME_VENUE_CHECKIN_INTERVAL_IN_MINUTES
+      );
+
+      return diff;
     }
   }
+};
 
-  const newVisitedVenue = {
+// Add the new venue to the visited venue list only if it meets some requirements.
+// Returns true if the venue hase been added, false otherwise
+export const addNewVenue = async (newVenue: Venue): Promise<boolean> => {
+  const visitedVenues = await getVisitedVenues();
+  const newVisitedVenue: VisitedVenue = {
     venue: newVenue,
-    from: dateToString(DateUtils.roundDownToNearestQuarter()),
-    to: dateToString(DateUtils.getNextMidnight())
+    from: DateUtils.getCurrentTime()
   };
-  visitedVenues.unshift(newVisitedVenue);
-  await saveVisitedVenues(visitedVenues);
+
+  if (shouldAddNewVenue(visitedVenues, newVisitedVenue)) {
+    visitedVenues.unshift(newVisitedVenue);
+    await saveVisitedVenues(visitedVenues);
+    return true;
+  }
+
+  return false;
 };
 
 export const deleteVenue = async (index: number): Promise<VisitedVenue[]> => {

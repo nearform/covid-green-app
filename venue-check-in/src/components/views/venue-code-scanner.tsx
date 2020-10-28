@@ -49,8 +49,10 @@ export const VenueCodeScanner: React.FC = () => {
       if (e.type === RNCamera.Constants.BarCodeType.qr) {
         setShouldReadBarCode(false);
         try {
-          await parseQRCodeAndSaveVenue(e.data);
-          navigation.navigate('venueCheckIn.scanSuccess');
+          const isLastCheckinValid = await parseQRCodeAndSaveVenue(e.data);
+          navigation.navigate('venueCheckIn.scanSuccess', {
+            isLastCheckinValid
+          });
         } catch (parseErr) {
           navigation.navigate('venueCheckIn.scanError');
         }

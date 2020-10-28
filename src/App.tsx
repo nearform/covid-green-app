@@ -181,6 +181,7 @@ const VenueStack = () => {
         name="venueCheckIn.scanSuccess"
         component={ScanResultSuccess}
         options={{title: t('viewNames:venueCheckIn')}}
+        initialParams={{isLastCheckinValid: true}}
       />
       <VenueCheckInStack.Screen
         name="venueCheckIn.scanError"
