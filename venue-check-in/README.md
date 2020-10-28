@@ -1,11 +1,28 @@
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Initial steps](#initial-steps)
+- [Update `src/App.tsx`](#update-srcapptsx)
+  - [Update react navigation by adding the new `VenueCheckInStack`](#update-react-navigation-by-adding-the-new-venuecheckinstack)
+  - [Add support for the new risky venue push notification](#add-support-for-the-new-risky-venue-push-notification)
+- [Add the venue check-in card into the Dashboard](#add-the-venue-check-in-card-into-the-dashboard)
+- [Add Venue check-in history into Settings](#add-venue-check-in-history-into-settings)
+- [Update the debug screen](#update-the-debug-screen)
+- [Add translations](#add-translations)
+
+<!-- /code_chunk_output -->
+
 This folder contains the implementation of the Venue check-in and QR code parsing feature.
 
 This README describes the initial configuration steps required to integrate this feature in a COVID app:
 
 - [Initial steps](#initial-steps)
 - [Update the react navigation by adding the new `VenueCheckInStack`](#update-the-react-navigation-by-adding-the-new-venuecheckinstack)
+  - [Add support for new risky venue alert](#add-support-for-new-risky-venue-alert)
 - [Add the venue check-in card into the Dashboard](#add-the-venue-check-in-card-into-the-dashboard)
 - [Add Venue check-in history into Settings](#add-venue-check-in-history-into-settings)
+- [Update the debug screen](#update-the-debug-screen)
 - [Add translations](#add-translations)
 
 # Initial steps
@@ -41,9 +58,11 @@ This README describes the initial configuration steps required to integrate this
   <uses-permission android:name="android.permission.CAMERA" />
   ```
 
-# Update the react navigation by adding the new `VenueCheckInStack`
+# Update `src/App.tsx`
 
-We need to create a parallel stack for the QR code modal-like screens, so the current configuration must changes to:
+## Update react navigation by adding the new `VenueCheckInStack`
+
+The navigation configuration must change because a parallel stack for the QR code modal-like screens, must be introduced. The new structure is:
 
 ```
 RootStack
@@ -58,47 +77,17 @@ const VenueCheckInStack = createStackNavigator();
 const RootStack = createStackNavigator();
 ```
 
-Add the `VenueStack` function that defines the stack for the QR code scanner screens:
+Add the `VenueStack` function that defines the stack for the QR code scanner screens (check full implementation in `src/App.tsx`):
 
 ```typescript
 const VenueStack = () => {
   const {t} = useTranslation();
   return (
     <VenueCheckInStack.Navigator
-      screenOptions={{
-        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-        cardStyle: {backgroundColor: colors.black},
-        gestureEnabled: false,
-        gestureDirection: 'horizontal',
-        animationEnabled: true,
-        header: () => null
-      }}
-      initialRouteName={'venueCheckIn.scanner'}
-      mode="modal"
-      headerMode="none">
+      ...
       <VenueCheckInStack.Screen
         name="venueCheckIn.scanner"
-        component={VenueCodeScanner}
-        options={{
-          title: t('viewNames:venueCheckIn')
-        }}
-      />
-      <VenueCheckInStack.Screen
-        name="venueCheckIn.scanSuccess"
-        component={ScanResultSuccess}
-        options={{title: t('viewNames:venueCheckIn')}}
-      />
-      <VenueCheckInStack.Screen
-        name="venueCheckIn.scanError"
-        component={ScanResultError}
-        options={{title: t('viewNames:venueCheckIn')}}
-      />
-
-      <VenueCheckInStack.Screen
-        name="venueCheckIn.permission"
-        component={CameraPermission}
-        options={{title: t('viewNames:venueCheckIn')}}
-      />
+      ...
     </VenueCheckInStack.Navigator>
   );
 };
@@ -132,7 +121,7 @@ const AppStack: React.FC = ({route}) => {
         }}
       />
       <Stack.Screen name="under16" component={Under16} />
-      ... ... ...
+      ...
       <Stack.Screen
         name="terms"
         component={TermsAndConditions}
@@ -143,7 +132,10 @@ const AppStack: React.FC = ({route}) => {
 };
 ```
 
-Add the new venue history screen to the settings in `AppStack`:
+Add two new screens to `AppStack`:
+
+- the venue history screen to settings;
+- the new information page the the risky venue alert;
 
 ```typescript
 const AppStack: React.FC = ({route}) => {
@@ -152,6 +144,11 @@ const AppStack: React.FC = ({route}) => {
         name="settings.venueHistory"
         component={VenueHistory}
         options={{title: t('viewNames:venueHistory')}}
+      />
+      <Stack.Screen
+        name="riskyVenueContact"
+        component={RiskyVenueContact}
+        options={{title: t('viewNames:riskyVenueContact')}}
       />
       ...
     </Stack.Navigator>
@@ -165,11 +162,13 @@ Update the `Navigation` function with the new navigation hierarchy:
 function Navigation({
   notification,
   exposureNotificationClicked,
+  riskyVenueNotification,
   setState
 }: {
   traceConfiguration: TraceConfiguration;
   notification: PN | null;
   exposureNotificationClicked: Boolean | null;
+  riskyVenueNotification: PN | null,
   setState: (value: React.SetStateAction<State>) => void;
 }) {
   ...
@@ -199,6 +198,66 @@ function Navigation({
     </NavigationContainer>
   );
 }
+```
+
+## Add support for the new risky venue push notification
+
+Update the `State` interface by adding the new `riskyVenueNotification` field:
+
+```typescript
+interface State {
+  ...
+  exposureNotificationClicked: Boolean | null;
+  riskyVenueNotification: PN | null;
+}
+```
+
+Then update the `App` component, by setting the default value for the new state field:
+
+```typescript
+export default function App(props: {
+  exposureNotificationClicked: Boolean | null;
+}) {
+  const [state, setState] = React.useState<State>({
+    loading: false,
+    notification: null,
+    exposureNotificationClicked: props.exposureNotificationClicked,
+    riskyVenueNotification: null // <- This one
+  });
+  ...
+```
+
+and by chaning the `PushNotification`'s `onNotification` function:
+
+```typescript
+    PushNotification.configure({
+      onRegister: function () {},
+      onNotification: async function (notification) {
+        if (isRiskyVenueNotificaton(notification)) {
+          setTimeout(
+            () =>
+              setState((s) => ({...s, riskyVenueNotification: notification})),
+            500
+          );
+        } else {
+          // The old code goes here
+          ...
+        }
+      }
+```
+
+Then pass the new `state.riskyVenueNotification` field to the `Navigation` component:
+
+```typescript
+return (
+<SafeAreaProvider>
+  <Base>
+    ...
+    <Navigation
+      riskyVenueNotification={state.riskyVenueNotification}
+      ...
+    />
+    ...
 ```
 
 # Add the venue check-in card into the Dashboard
@@ -231,9 +290,32 @@ In `src/components/views/settings/index.tsx` add the configuration object for th
   ...
 ```
 
+# Update the debug screen
+
+Update the debug screen (`src/components/views/settings/debug.tsx`) by adding a new button to simulate a Risky Venue notification:
+
+```typescript
+import {showRiskyVenueNotification} from '../../../../venue-check-in';
+...
+export const Debug = ({navigation}) => {
+  ...
+  const checkRiskyVenues = () => {
+    showRiskyVenueNotification();
+  };
+  ...
+  return (
+    <Basic heading="Debug">
+       ...
+      <Button type="default" onPress={checkRiskyVenues}>
+        Check Risky Venues
+      </Button>
+  ...
+```
+
 # Add translations
 
-Add the following translations to `assets/lang/en.json`:
+Add to `assets/lang/en.json` all the translations under `venueCheckIn` key:
+`
 
 ```json
 {
@@ -241,42 +323,7 @@ Add the following translations to `assets/lang/en.json`:
   "venueCheckIn": {
     "title": "Venue check-In",
     "subTitle": "Check in to a venue by scanning an official QR code",
-    "scan": {
-      "title": "Check in to a venue by scanning an official QR code",
-      "description": "Your phone will confirm when the venue has been recognised.",
-      "footer": "If you need assistance, please speak to a member of staff at the venue.",
-      "authRequired": {
-        "title": "Allow camera access",
-        "description": "This app needs access to your camera in order to check in to venues by scanning official QR codes.",
-        "cancelButton": "Go back",
-        "confirmButton": "Allow camera permissions"
-      }
-    },
-    "result": {
-      "success": {
-        "title": "Successful check-in",
-        "message": "Thank you for scanning the QR code.\nYour visit to this venue has been recorded.",
-        "continueButton": "Continue",
-        "cancelButton": "Cancel this check-in"
-      },
-      "error": {
-        "title": "QR code not recognised",
-        "message": "It may not be an official QR code or it could be damaged. Please speak to a member of staff at the venue for assistance.",
-        "tryAgainButton": "Try again"
-      }
-    },
-    "history": {
-      "title": "Venue History",
-      "noVenues": "You haven’t checked in to any venues yet. Once you do, you will be able to view your history and delete individual records here.",
-      "editButton": "Edit",
-      "deleteAllButton": "Delete all check-in data",
-      "alert": {
-        "title": "Delete all check-in data",
-        "message": "Are you sure you want to delete all of your venue check-in data?",
-        "confirmButton": "Delete",
-        "cancelButton": "Cancel"
-      }
-    }
+    ...
   }
   ...
 }
@@ -298,7 +345,8 @@ And:
 ```json
 "viewNames": {
   ...
-  "venueHistory": "Venue Check-In"
+  "venueHistory": "Venue Check-In",
+  "riskyVenueContact": "Risky Venue Contact"
   ...
  }
 ```
