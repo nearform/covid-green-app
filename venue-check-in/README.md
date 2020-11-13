@@ -1,25 +1,11 @@
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
-
-<!-- code_chunk_output -->
-
-- [Initial steps](#initial-steps)
-- [Update `src/App.tsx`](#update-srcapptsx)
-  - [Update react navigation by adding the new `VenueCheckInStack`](#update-react-navigation-by-adding-the-new-venuecheckinstack)
-  - [Add support for the new risky venue push notification](#add-support-for-the-new-risky-venue-push-notification)
-- [Add the venue check-in card into the Dashboard](#add-the-venue-check-in-card-into-the-dashboard)
-- [Add Venue check-in history into Settings](#add-venue-check-in-history-into-settings)
-- [Update the debug screen](#update-the-debug-screen)
-- [Add translations](#add-translations)
-
-<!-- /code_chunk_output -->
-
 This folder contains the implementation of the Venue check-in and QR code parsing feature.
 
 This README describes the initial configuration steps required to integrate this feature in a COVID app:
 
 - [Initial steps](#initial-steps)
-- [Update the react navigation by adding the new `VenueCheckInStack`](#update-the-react-navigation-by-adding-the-new-venuecheckinstack)
-  - [Add support for new risky venue alert](#add-support-for-new-risky-venue-alert)
+- [Update `src/App.tsx`](#update-srcapptsx)
+  - [Update react navigation by adding the new `VenueCheckInStack`](#update-react-navigation-by-adding-the-new-venuecheckinstack)
+  - [Add support for the new risky venue push notification](#add-support-for-the-new-risky-venue-push-notification)
 - [Add the venue check-in card into the Dashboard](#add-the-venue-check-in-card-into-the-dashboard)
 - [Add Venue check-in history into Settings](#add-venue-check-in-history-into-settings)
 - [Update the debug screen](#update-the-debug-screen)
