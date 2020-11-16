@@ -27,7 +27,9 @@ This README describes the initial configuration steps required to integrate this
   "react-native-camera": "^3.40.0",
   ```
 
-- Follow the React Native Camera setup steps for iOS: [iOS - other required steps](https://github.com/react-native-camera/react-native-camera/blob/master/docs/installation.md#ios---other-required-steps).
+  - If your project does not support SVG icons, add `react-native-svg-transformer` (version `^0.14.3`) and configure it: https://github.com/kristerkari/react-native-svg-transformer
+
+* Follow the React Native Camera setup steps for iOS: [iOS - other required steps](https://github.com/react-native-camera/react-native-camera/blob/master/docs/installation.md#ios---other-required-steps).
 
   - Only the `NSCameraUsageDescription` permission is required:
 
